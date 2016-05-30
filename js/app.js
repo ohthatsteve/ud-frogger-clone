@@ -109,7 +109,7 @@ Player.prototype.update = function(e) {
 
             //IF player reaches the top of the map
             //run win function
-            if (this.y == 0) {
+            if (this.y === 0) {
                 this.win();
             }
             break;
