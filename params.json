@@ -1,6 +1,0 @@
-{
-  "name": "Ud-frogger-clone",
-  "tagline": "",
-  "body": "#Frogger Clone\r\nA remake of an arcade classic, in this simple game the player must navigate across a map while avoiding enemies that scroll across the screen.\r\n\r\n##Setup\r\nFirst, clone or download [this](https://github.com/ohthatsteve/ud-frogger-clone) repository.\r\nNext, open `index.html` in a browser.\r\n\r\n##Gameplay\r\n* Use arrow keys to move player.\r\n* Reach water to win and start again, with one more enemy spawning (up to a cap).\r\n* Making contact with an enemy will reset your progress.\r\n\r\n\r\n",
-  "note": "Don't delete this file! It's used internally to help with page regeneration."
-}
