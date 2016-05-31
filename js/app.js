@@ -123,8 +123,12 @@ Player.prototype.update = function(e) {
             //run win function
             if (this.y === 0) {
 
-                setTimeout(this.win, 500);
-                setTimeout(this.reset, 500);
+                //Bind 'this' to the current value of 'this' (the player object)
+                // for the win function call.  Without bind, using setTimout
+                // causes 'this' to refer to the window object during the
+                //win function
+                setTimeout(this.win.bind(this), 500);
+
             }
             break;
 
@@ -145,7 +149,9 @@ Player.prototype.handleInput = function(e) {
 //and resumes enemy spawning
 Player.prototype.reset = function() {
 
-    player = new Player();
+    this.xMod = 2;
+    this.x = 202;
+    this.y = 5;
     firstEnemy.spawn();
 };
 
@@ -160,6 +166,11 @@ Player.prototype.win = function() {
         //By 1
         maxEnemies += 1;
     }
+
+    firstEnemy.spawn();
+
+    this.reset();
+
 };
 
 // Now instantiate your objects.
