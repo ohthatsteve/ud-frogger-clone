@@ -15,6 +15,7 @@ Entity.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y * tileY - 10);
 };
 
+
 // Enemies our player must avoid
 var Enemy = function() {
 
@@ -29,7 +30,9 @@ var Enemy = function() {
     this.speed = this.randomNumber(40, 176);
 };
 
+//Allow failed Enemy lookups to fall back to Entity object
 Enemy.prototype = Object.create(Entity.prototype);
+Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -62,7 +65,7 @@ Enemy.prototype.collision = function() {
 
         //Reset max number of enemies
         maxEnemies = 5;
-
+        allEnemies = [];
         player.reset();
     }
 };
@@ -71,6 +74,12 @@ Enemy.prototype.collision = function() {
 Enemy.prototype.randomNumber = function(min, max) {
     var num = Math.floor(Math.random() * (max - min) + min);
     return num;
+};
+
+Enemy.prototype.spawn = function() {
+    while (allEnemies.length < maxEnemies) {
+        allEnemies.push(new Enemy);
+    }
 };
 
 // Now write your own player class
@@ -84,7 +93,10 @@ var Player = function() {
     this.sprite = "images/char-boy.png"
 };
 
+//Allow failed Player lookups to fall back to Entity object
 Player.prototype = Object.create(Entity.prototype);
+Player.prototype.constructor = Player;
+
 
 Player.prototype.update = function(e) {
     switch (e) {
@@ -110,7 +122,9 @@ Player.prototype.update = function(e) {
             //IF player reaches the top of the map
             //run win function
             if (this.y === 0) {
-                this.win();
+
+                setTimeout(this.win, 500);
+                setTimeout(this.reset, 500);
             }
             break;
 
@@ -127,6 +141,15 @@ Player.prototype.handleInput = function(e) {
     this.update(e);
 };
 
+//Resets player to original positions
+//and resumes enemy spawning
+Player.prototype.reset = function() {
+
+    player = new Player();
+    firstEnemy.spawn();
+};
+
+
 Player.prototype.win = function() {
 
     //IF there are currently less enemeies
@@ -136,21 +159,7 @@ Player.prototype.win = function() {
         //Increase number of enemies spawning
         //By 1
         maxEnemies += 1;
-    };
-    setTimeout(this.reset,500);
-};
-
-Player.prototype.reset = function(){
-    //Reset player location
-    this.xMod = 2;
-    player.x = this.xMod * tileX;
-    player.y = 5;
-
-    //Empty allEnemies array
-    allEnemies = [];
-
-    //Resume spawning enemies
-    spawnEnemies();
+    }
 };
 
 // Now instantiate your objects.
@@ -158,19 +167,10 @@ Player.prototype.reset = function(){
 // Place the player object in a variable called player
 
 var player = new Player(),
+    firstEnemy = new Enemy(),
     allEnemies = [],
     maxEnemies = 5,
     hardCap = 10;
-
-//Function to create new enemies up to a
-//hardcapped number, set to a timer
-function spawnEnemies() {
-    if (allEnemies.length < maxEnemies) {
-        allEnemies.push(new Enemy);
-        setTimeout(spawnEnemies, 1000);
-    };
-
-};
 
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
@@ -184,4 +184,4 @@ document.addEventListener('keyup', function(e) {
 });
 
 //Begin spawning enemies
-spawnEnemies();
+firstEnemy.spawn();
